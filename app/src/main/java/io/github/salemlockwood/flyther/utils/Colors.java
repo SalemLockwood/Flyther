@@ -20,7 +20,7 @@ public class Colors {
 
     public static Paint getGuiColor(Context context){
         Paint guipaint = new Paint();
-        guipaint.setTextSize(160);
+        guipaint.setTextSize(100);
         guipaint.setColor(Color.BLACK);
         guipaint.setStyle(Paint.Style.STROKE);
         guipaint.setStrokeWidth(5);
@@ -31,7 +31,7 @@ public class Colors {
 
     public static Paint getGuiDisabledColor(Context context){
         Paint guipaint = new Paint();
-        guipaint.setTextSize(160);
+        guipaint.setTextSize(100);
         guipaint.setColor(Color.GRAY);
         guipaint.setStyle(Paint.Style.STROKE);
         guipaint.setStrokeWidth(5);
@@ -55,6 +55,17 @@ public class Colors {
     public static Paint getBetaColor(Context context) {
         Paint betaColor = new Paint();
         betaColor.setTextSize(80);
+        betaColor.setColor(Color.RED);
+        betaColor.setTypeface(Typeface.DEFAULT_BOLD);
+        Typeface tf = Typeface.createFromAsset(context.getAssets(),"fonts/kenvector_future.ttf");
+        betaColor.setTypeface(tf);
+        betaColor.setShadowLayer(3, 5, 5, Color.BLACK);
+        return betaColor;
+    }
+
+    public static Paint getFPSColor(Context context) {
+        Paint betaColor = new Paint();
+        betaColor.setTextSize(60);
         betaColor.setColor(Color.RED);
         betaColor.setTypeface(Typeface.DEFAULT_BOLD);
         Typeface tf = Typeface.createFromAsset(context.getAssets(),"fonts/kenvector_future.ttf");

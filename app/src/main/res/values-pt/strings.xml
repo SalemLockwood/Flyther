@@ -4,7 +4,10 @@
     <string name="settings">Configurações</string>
     <string name="leadboard">Placares</string>
     <string name="credits">Créditos</string>
-    <string name="back">Voltas</string>
+    <string name="back">Voltar</string>
     <string name="showUpdateRate">Mostrar Qd/s</string>
     <string name="underDevelopment">Sob Desenvolvimento</string>
+    <string name="enableMusic">Habilitar Música</string>
+    <string name="enableSound">Habilitar Efeitos</string>
+    <string name="noAction">Sem Ação</string>
 </resources>

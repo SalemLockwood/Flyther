@@ -7,4 +7,7 @@
     <string name="back">Back</string>
     <string name="showUpdateRate">Show Fr/s</string>
     <string name="underDevelopment">Under Development</string>
+    <string name="enableMusic">Enable Music</string>
+    <string name="enableSound">Enable Effects</string>
+    <string name="noAction">No Action</string>
 </resources>
