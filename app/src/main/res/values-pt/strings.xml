@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="newgame">Novo Jogo</string>
+    <string name="settings">Configurações</string>
+    <string name="leadboard">Placares</string>
+    <string name="credits">Créditos</string>
+    <string name="back">Voltas</string>
+    <string name="showUpdateRate">Mostrar Qd/s</string>
+    <string name="underDevelopment">Sob Desenvolvimento</string>
+</resources>

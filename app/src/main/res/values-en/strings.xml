@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="newgame">New Game</string>
+    <string name="settings">Settings</string>
+    <string name="leadboard">Leadboard</string>
+    <string name="credits">Credits</string>
+    <string name="back">Back</string>
+    <string name="showUpdateRate">Show Fr/s</string>
+    <string name="underDevelopment">Under Development</string>
+</resources>
