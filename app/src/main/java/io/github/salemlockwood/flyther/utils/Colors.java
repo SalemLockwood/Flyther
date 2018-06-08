@@ -89,4 +89,19 @@ public class Colors {
         redPoint.setStrokeWidth(5);
         return redPoint;
     }
+
+    public static Paint getFuelBarPaint() {
+        Paint fuelBarPaint = new Paint();
+        fuelBarPaint.setColor(0xFF8A2BE2);
+        fuelBarPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        return fuelBarPaint;
+    }
+
+    public static Paint getFuelBarStrokePaint() {
+        Paint fuelBarPaint = new Paint();
+        fuelBarPaint.setColor(Color.BLACK);
+        fuelBarPaint.setStyle(Paint.Style.STROKE);
+        fuelBarPaint.setShadowLayer(3, 5, 5, Color.BLACK);
+        return fuelBarPaint;
+    }
 }

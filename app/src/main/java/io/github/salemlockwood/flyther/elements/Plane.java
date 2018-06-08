@@ -29,15 +29,23 @@ public class Plane {
     private Context context;
     private Sound sound;
     private List<Bitmap> plane;
+    private Bitmap expsprite;
+    private final Bitmap nucsprite;
+    private Fuel fuel;
 
-    public Plane(Screen screen, Context context, int planeColor){
+    public Plane(Screen screen, Context context, int planeColor, Fuel fuel){
         this.altitude = 200;
         this.speed = THRUST/2;
         this.screen = screen;
         this.context = context;
+        this.fuel = fuel;
         sound = new Sound(context);
         plane = new ArrayList<>();
         populatePlane(planeColor);
+        expsprite = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.explosion_transparent);
+        nucsprite = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.nuclear_explosion);
     }
 
     private void populatePlane(int planeColor) {
@@ -177,10 +185,11 @@ public class Plane {
     }
 
     public void fall() {
-        boolean hitGround = this.altitude + RADIUS > screen.getHeight();
-        if(!hitGround)
+        boolean hitGround = this.altitude + RADIUS > screen.getHeight() - 70;
+        if(!hitGround) {
             this.altitude += speed;
-        speed++;
+            speed++;
+        }
     }
 
     public int getAltitude(){
@@ -196,18 +205,36 @@ public class Plane {
         }
     }
 
-    public void dead(int currentFrame){
-        Bitmap expsprite = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.explosion17);
+    public void dead(int currentFrame, Canvas canvas, int planePropPos){
+        boolean hitGround = this.altitude + RADIUS > screen.getHeight() - 70;
+        Bitmap explosion = (hitGround ? nucsprite : expsprite);
         int EXP_COLS = 5;
         int EXP_ROWS = 5;
-        int SPRITE_WIDTH = expsprite.getWidth() / EXP_COLS;
-        int SPRITE_HEIGHT = expsprite.getHeight() / EXP_ROWS;
-        int start_x = currentFrame * SPRITE_WIDTH * (Integer.valueOf(currentFrame/EXP_ROWS));
-        int start_y = currentFrame;
+        int SPRITE_WIDTH = explosion.getWidth() / EXP_COLS;
+        int SPRITE_HEIGHT = explosion.getHeight() / EXP_ROWS;
+        int start_x = currentFrame%EXP_COLS * SPRITE_WIDTH;
+        int start_y = currentFrame/EXP_ROWS * SPRITE_HEIGHT;
+        Bitmap bp = Bitmap.createBitmap(explosion,start_x,start_y,SPRITE_WIDTH,SPRITE_HEIGHT);
+        int x_f = hitGround ? X-50-currentFrame*5 : X-50;
+        int y_f = altitude - 50;
+
+        if(currentFrame < 15) {
+            Matrix m = new Matrix();
+            m.postRotate(speed);
+            Bitmap rotatedPlane = Bitmap.createBitmap(plane.get(planePropPos), 0, 0,
+                    plane.get(planePropPos).getWidth(), plane.get(planePropPos).getHeight(), m, true);
+
+            canvas.drawBitmap(rotatedPlane, x_f, y_f, null);
+        }
+
+        canvas.drawBitmap(bp,x_f,y_f,null);
     }
 
     public int getRadius() {
         return RADIUS;
+    }
+
+    public Fuel getFuel(){
+        return this.fuel;
     }
 }

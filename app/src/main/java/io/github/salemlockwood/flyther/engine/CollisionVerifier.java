@@ -16,6 +16,6 @@ public class CollisionVerifier {
     }
 
     public boolean haveCrashed(){
-        return spikes.hasCollisionWith(plane) || plane.getAltitude() > (screen.getHeight() - 70);
+        return spikes.hasCollisionWith(plane) || plane.getAltitude() > (screen.getHeight()-160);
     }
 }

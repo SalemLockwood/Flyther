@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import io.github.salemlockwood.flyther.BuildConfig;
 import io.github.salemlockwood.flyther.R;
+import io.github.salemlockwood.flyther.elements.Fuel;
 import io.github.salemlockwood.flyther.elements.GUI;
 import io.github.salemlockwood.flyther.elements.GameOver;
 import io.github.salemlockwood.flyther.elements.Ground;
@@ -22,6 +23,7 @@ import io.github.salemlockwood.flyther.elements.Plane;
 import io.github.salemlockwood.flyther.elements.Score;
 import io.github.salemlockwood.flyther.elements.Spike;
 import io.github.salemlockwood.flyther.elements.Spikes;
+import io.github.salemlockwood.flyther.elements.Stars;
 import io.github.salemlockwood.flyther.utils.Colors;
 import io.github.salemlockwood.flyther.utils.Screen;
 
@@ -51,6 +53,10 @@ public class Game extends SurfaceView implements Runnable,View.OnTouchListener {
     private SharedPreferences sp;
     private boolean showRateEnabled = false;
     private float updateRate = 0.0f;
+    private boolean planeExploding = false;
+    private int planeExplodingFrame = 0;
+    private Fuel fuel;
+    private Stars stars;
 
     public Game(Context context) {
         super(context);
@@ -64,7 +70,12 @@ public class Game extends SurfaceView implements Runnable,View.OnTouchListener {
         if(isRunning) {
             switch (screen.getCurrentScreen()){
                 case GAME_SCREEN:
-                    plane.fly();
+                    if(!planeExploding) {
+                        if(fuel.getFuel() > 50) {
+                            plane.fly();
+                            fuel.dropFuel();
+                        }
+                    }
                     break;
                 default:
                     execGuiAction(this.gui.touchAt((int) event.getY()));
@@ -120,20 +131,35 @@ public class Game extends SurfaceView implements Runnable,View.OnTouchListener {
 
     private void drawGameScreen(Canvas canvas) {
         long currentTime = System.currentTimeMillis();
-        propellerPosition++;
-        if(propellerPosition>3) propellerPosition = 0;
-        plane.drawAt(canvas,propellerPosition);
-        plane.fall();
+
         spikes.move();
         spikes.drawAt(canvas);
         grounds.drawAt(canvas);
         grounds.move();
-        score.drawAt(canvas);
-
-        if((new CollisionVerifier(plane,spikes,screen).haveCrashed())){
-            new GameOver(screen,context).drawAt(canvas);
-            isRunning = false;
+        stars.drawAt(canvas);
+        stars.move();
+        if(!planeExploding) {
+            propellerPosition++;
+            if(propellerPosition>3) propellerPosition = 0;
+            plane.drawAt(canvas,propellerPosition);
+            plane.fall();
+            stars.collidesWith(plane);
+            if ((new CollisionVerifier(plane, spikes, screen).haveCrashed())) {
+                planeExploding = true;
+            }
+        } else {
+            plane.fall();
+            plane.dead(planeExplodingFrame,canvas,propellerPosition);
+            planeExplodingFrame++;
+            if(planeExplodingFrame == 24){
+                new GameOver(screen, context).drawAt(canvas);
+                planeExplodingFrame = 0;
+                planeExploding = false;
+                isRunning = false;
+            }
         }
+        score.drawAt(canvas);
+        fuel.drawAt(canvas);
 
         if(showRateEnabled) {
             canvas.drawText(String.format("%.2f",updateRate), 10, screen.getHeight() - 10, Colors.getFPSColor(context));
@@ -155,13 +181,15 @@ public class Game extends SurfaceView implements Runnable,View.OnTouchListener {
         score = new Score(context);
         this.planeColor = (int) (Math.random() * 4);
         this.weather = (int) (Math.random() * 5);
-        plane = new Plane(screen,context,planeColor);
+        this.fuel = new Fuel(screen);
+        plane = new Plane(screen,context,planeColor,fuel);
         Bitmap back = BitmapFactory.decodeResource(getResources(), R.drawable.background);
         background = Bitmap.createScaledBitmap(back, back.getWidth(), screen.getHeight(), false);
         this.spike = new Spike(screen, 200,context,weather);
         this.spikes = new Spikes(screen,score,context,weather);
         this.grounds = new Grounds(screen,context,weather);
         this.gui = new GUI(screen,context);
+        this.stars = new Stars(screen,context);
         isRunning = true;
     }
 
